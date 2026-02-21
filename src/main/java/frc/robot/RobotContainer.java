@@ -5,12 +5,13 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.BangBangSubsystem;
 //import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.LauncherSubsystem;
 import edu.wpi.first.wpilibj.Joystick;
 //import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-//import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -23,7 +24,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  public final LauncherSubsystem m_launcherSubsystem = new LauncherSubsystem();
+  //public final LauncherSubsystem m_launcherSubsystem = new LauncherSubsystem();
+  public final LauncherSubsystem m_launcherSubsystem = LauncherSubsystem.getInstance();
+  public final BangBangSubsystem m_BBSubsystem = BangBangSubsystem.getInstance();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   Joystick m_joystick1 = new Joystick(OperatorConstants.kDriverControllerPort1);
@@ -47,5 +50,7 @@ public class RobotContainer {
     //Joystick trigger starts/stops the motors
     new JoystickButton(m_joystick1, 1).debounce(0.1)
       .onTrue(new InstantCommand(() -> m_launcherSubsystem.runMotorsCmd(), m_launcherSubsystem));
+      new JoystickButton(m_joystick1, 2).debounce(0.1)
+      .onTrue(new RunCommand(() -> m_launcherSubsystem.BangBangControl(m_launcherSubsystem.launcherFlex, m_launcherSubsystem.launcherEncoder, 2700, false), m_launcherSubsystem));*/
   }
 }

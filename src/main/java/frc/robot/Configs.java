@@ -20,7 +20,9 @@ public class Configs {
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
                 //.pidf(0.5, 0, 0, 0)
                 .outputRange(0, 1)
-                .positionWrappingEnabled(false);
+                .positionWrappingEnabled(false)
+                .feedForward
+                    .kV(.4/2660);
 
             indexerConfig
                 .idleMode(IdleMode.kBrake)
@@ -31,7 +33,9 @@ public class Configs {
                 .i(0)
                 .d(0)
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .outputRange(-1, 1);
+                .outputRange(-1, 1)
+                .feedForward
+                    .kV(.6/3000);
                 
             elevatorConfig
                 .idleMode(IdleMode.kBrake)
@@ -40,7 +44,9 @@ public class Configs {
             elevatorConfig.closedLoop
                 //.pidf(1, 0, 0, 0)
                 .feedbackSensor(FeedbackSensor.kPrimaryEncoder)
-                .outputRange(-1, 1);
+                .outputRange(-1, 1)
+                .feedForward
+                    .kV(.6/3000);;
           
             intakeConfig
                 .idleMode(IdleMode.kBrake)

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Configs;
 import frc.robot.Constants.LauncherConstants;
+//import frc.robot.subsystems.BangBangSubsystem;
 
 public class LauncherSubsystem extends SubsystemBase {
 
@@ -56,6 +57,8 @@ public class LauncherSubsystem extends SubsystemBase {
       }
       return mInstance;
     }
+
+  BangBangSubsystem BBsubsys = BangBangSubsystem.getInstance();
 
   /** Creates a new ExampleSubsystem. */
   public LauncherSubsystem() {
@@ -117,7 +120,9 @@ public class LauncherSubsystem extends SubsystemBase {
         launcherPIDController.setSetpoint(SmartDashboard.getNumber("Launch Target Speed", 0.0), ControlType.kVelocity); //Set the setpoint for the PID controller
       } else { //Use BangBang for the Flywheel?
         if(SmartDashboard.getBoolean("Launch with BB", false)) {
-          new RunCommand(() -> BangBangControl(launcherFlex, launcherEncoder, SmartDashboard.getNumber("Launch Target Speed", 0.0), false), mInstance); //Start the BangBang controller for the Flywheel
+          System.out.printf("Calling BangBangControl: %f\n", SmartDashboard.getNumber("Launch Target Speed", 0.0));
+          //new RunCommand(() -> BBsubsys.BangBangControl(launcherFlex, launcherEncoder, SmartDashboard.getNumber("Launch Target Speed", 0.0), false), BBsubsys);
+          new RunCommand(() -> BBsubsys.BangBangControl(launcherFlex, launcherEncoder, 2700, false), BBsubsys); //Start the BangBang controller for the Flywheel
         } else { // Run Flywheel with set voltage
           launcherFlex.set(SmartDashboard.getNumber("LauncherPowerLevel", 0));
         }
@@ -154,7 +159,7 @@ public class LauncherSubsystem extends SubsystemBase {
       }
     } else {
       if(SmartDashboard.getBoolean("Launch with BB", false)) { //Flywheel running with BangBang
-        new InstantCommand(() -> BangBangControl(launcherFlex, launcherEncoder, 0, true), mInstance); //Stop the controller
+        new InstantCommand(() -> BBsubsys.BangBangControl(launcherFlex, launcherEncoder, 0, true), BBsubsys); //Stop the controller
       }
       launcherFlex.set(0);  //Set the output to 0
       indexerSpark.set(0);  //Setting the PID to a zero setpoint caused problems with the PID
@@ -163,7 +168,8 @@ public class LauncherSubsystem extends SubsystemBase {
     }
   }
 
-  public void BangBangControl(SparkFlex controller, RelativeEncoder encoder, double speed, boolean stop) {
+  /*public void BangBangControl(SparkFlex controller, RelativeEncoder encoder, double speed, boolean stop) {
+    System.out.printf("Entered BangBangControl\n");
     if(stop)  //being asked to stop the flywheel
       controller.set(0);
     else {
@@ -172,6 +178,6 @@ public class LauncherSubsystem extends SubsystemBase {
       else
         controller.set(0);  //Cut the power and let it coast
     }
-  }
+  }*/
 
 }
