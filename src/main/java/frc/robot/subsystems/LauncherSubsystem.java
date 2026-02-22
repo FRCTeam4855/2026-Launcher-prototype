@@ -121,8 +121,8 @@ public class LauncherSubsystem extends SubsystemBase {
       } else { //Use BangBang for the Flywheel?
         if(SmartDashboard.getBoolean("Launch with BB", false)) {
           System.out.printf("Calling BangBangControl: %f\n", SmartDashboard.getNumber("Launch Target Speed", 0.0));
-          //new RunCommand(() -> BBsubsys.BangBangControl(launcherFlex, launcherEncoder, SmartDashboard.getNumber("Launch Target Speed", 0.0), false), BBsubsys);
-          new RunCommand(() -> BBsubsys.BangBangControl(launcherFlex, launcherEncoder, 2700, false), BBsubsys); //Start the BangBang controller for the Flywheel
+          BBsubsys.setpoint = SmartDashboard.getNumber("Launch Target Speed", 0.0);
+          BBsubsys.enableBangBang = true;
         } else { // Run Flywheel with set voltage
           launcherFlex.set(SmartDashboard.getNumber("LauncherPowerLevel", 0));
         }
@@ -159,7 +159,8 @@ public class LauncherSubsystem extends SubsystemBase {
       }
     } else {
       if(SmartDashboard.getBoolean("Launch with BB", false)) { //Flywheel running with BangBang
-        new InstantCommand(() -> BBsubsys.BangBangControl(launcherFlex, launcherEncoder, 0, true), BBsubsys); //Stop the controller
+        BBsubsys.setpoint = 0;
+        BBsubsys.enableBangBang = false;
       }
       launcherFlex.set(0);  //Set the output to 0
       indexerSpark.set(0);  //Setting the PID to a zero setpoint caused problems with the PID

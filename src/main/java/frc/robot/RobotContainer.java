@@ -35,6 +35,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    m_BBSubsystem.setDefaultCommand(
+      new RunCommand(() -> m_BBSubsystem.BangBangControl(m_launcherSubsystem.launcherFlex, m_launcherSubsystem.launcherEncoder), m_BBSubsystem));
+
   }
 
   /**
@@ -50,7 +54,7 @@ public class RobotContainer {
     //Joystick trigger starts/stops the motors
     new JoystickButton(m_joystick1, 1).debounce(0.1)
       .onTrue(new InstantCommand(() -> m_launcherSubsystem.runMotorsCmd(), m_launcherSubsystem));
-      new JoystickButton(m_joystick1, 2).debounce(0.1)
+      /*new JoystickButton(m_joystick1, 2).debounce(0.1)
       .onTrue(new RunCommand(() -> m_launcherSubsystem.BangBangControl(m_launcherSubsystem.launcherFlex, m_launcherSubsystem.launcherEncoder, 2700, false), m_launcherSubsystem));*/
   }
 }

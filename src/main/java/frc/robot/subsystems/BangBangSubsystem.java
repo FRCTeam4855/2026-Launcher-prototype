@@ -7,6 +7,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class BangBangSubsystem extends SubsystemBase {
+    
+    public double setpoint = 0;
+    public boolean enableBangBang = false;
+
     @Override
     public void periodic() {
     }
@@ -27,15 +31,23 @@ public class BangBangSubsystem extends SubsystemBase {
     public BangBangSubsystem() {
     }
 
-    public void BangBangControl(SparkFlex controller, RelativeEncoder encoder, double speed, boolean stop) {
-        System.out.printf("Entered BangBangControl\n");
-        if(stop)  //being asked to stop the flywheel
+    public void setBangBangSetpoint(double speed) {
+        setpoint = speed;
+        System.out.printf("setpoint set to %f", setpoint);
+    }
+    
+    public void BangBangControl(SparkFlex controller, RelativeEncoder encoder) {
+        /*if(stop)  //being asked to stop the flywheel
         controller.set(0);
-        else {
-        if(encoder.getVelocity() < speed) //If the flywheel speed is less than the desired speed
-            controller.set(1);  //Give the flywheel full power
-        else
-            controller.set(0);  //Cut the power and let it coast
+        else {*/
+        if(enableBangBang) {
+            double encoderVelocity = encoder.getVelocity();
+            //if(encoder.getVelocity() < setpoint) //If the flywheel speed is less 
+            if(encoderVelocity >= 0 && encoderVelocity < setpoint) //If the flywheel speed is less than the desired speed
+                controller.set(1);  //Give the flywheel full power
+            else
+                controller.set(0);  //Cut the power and let it coast
         }
+        
     }
 }
